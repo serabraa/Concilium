@@ -14,7 +14,7 @@ struct ChatView: View {
     @State var messages: [Message] = []
     @State var inputText = ""
     
-    @StateObject private var peerService = PeerConnectionService()
+    @ObservedObject var peerService: PeerConnectionService
 
     
     
@@ -92,8 +92,6 @@ struct ChatView: View {
         }
 
         .onAppear{
-            peerService.startAdvertising()
-            peerService.startBrowsing()
             
             peerService.onMessageReceived = { message in
                 messages.append(message)
@@ -103,15 +101,16 @@ struct ChatView: View {
                 print("Connected with \(peerName)")
             }
         }
-        .onDisappear {
-            peerService.stop()
-        }
+//        .onDisappear {
+//            peerService.stop()
+//        }
     }
 }
 
 
 
 #Preview {
-    ChatView()
+    @Previewable @StateObject var peerService = PeerConnectionService()
+    ChatView(peerService: peerService)
         .preferredColorScheme(.dark)
 }

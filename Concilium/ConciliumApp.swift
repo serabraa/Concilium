@@ -9,9 +9,11 @@ import SwiftUI
 
 @main
 struct ConciliumApp: App {
+    @StateObject private var peerService = PeerConnectionService()
+    
     var body: some Scene {
         WindowGroup {
-            PeerDiscoveryView()
+            EntryView()
                 .preferredColorScheme(.dark)
         }
     }
