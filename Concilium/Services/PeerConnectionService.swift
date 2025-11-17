@@ -20,6 +20,11 @@ final class PeerConnectionService: NSObject, ObservableObject {
     var onMessageReceived: ((Message) -> Void)?
     var onPeerConnected: ((String) -> Void)?
     
+    @Published var connectedPeerName: String?
+    @Published var isConnected = false
+
+    @Published var discoveredPeers: [MCPeerID] = []
+    
     override init() {
         super.init()
         session = MCSession(peer: myPeerID, securityIdentity: nil, encryptionPreference: .required)
@@ -67,14 +72,23 @@ extension PeerConnectionService: MCSessionDelegate {
         // Connected, connecting, or not connected
         switch state {
         case .notConnected:
+            
+            DispatchQueue.main.sync { [weak self] in
+                self?.connectedPeerName = nil
+                self?.isConnected = false
+            }
             print("❌ Disconnected from \(peerID.displayName)")
+            
         case .connecting:
             print("🔄 Connecting to \(peerID.displayName)")
         case .connected:
-            print("✅ Connected to \(peerID.displayName)")
+            
             DispatchQueue.main.sync { [weak self] in
                 self?.onPeerConnected?(peerID.displayName)
+                self?.connectedPeerName = peerID.displayName
+                self?.isConnected = true
             }
+            print("✅ Connected to \(peerID.displayName)")
         @unknown default:
             break
         }

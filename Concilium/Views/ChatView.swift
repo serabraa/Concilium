@@ -33,6 +33,19 @@ struct ChatView: View {
     
     var body: some View {
         VStack{
+            HStack{
+                VStack(alignment: .center, spacing: 4){
+                    Text(peerService.connectedPeerName ?? "no connected device")
+                        .font(.headline)
+                        .padding(.bottom,2)
+                    Text(peerService.isConnected ? "Connected" : "No Connection")
+                        .font(.caption)
+                        .padding(.bottom,5)
+                }
+            }
+            .frame(maxWidth: .infinity)
+            .background(.white.opacity(0.1))
+
             ScrollViewReader{ proxy in
                 ScrollView{
                     ForEach(messages) { message in
