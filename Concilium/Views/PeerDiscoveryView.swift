@@ -43,6 +43,8 @@ struct PeerDiscoveryView: View {
                                     Text(peer.displayName)
                                         .font(.headline)
                                         .multilineTextAlignment(.center)
+                                        .lineLimit(1)
+                                        .minimumScaleFactor(0.5)
                                 }
                                 .frame(maxWidth: .infinity,minHeight: 100)
                                 .padding()
